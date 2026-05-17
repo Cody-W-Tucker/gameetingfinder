@@ -141,6 +141,13 @@
       .issue-copy p {
         margin: 0 0 12px;
       }
+      .issue-copy p.issue-link {
+        margin-top: -2px;
+        font-size: 14px;
+      }
+      .issue-copy a {
+        color: var(--accent);
+      }
       .issue-copy ul {
         margin: 0;
         padding-left: 18px;
@@ -266,6 +273,12 @@
                 not navigate, open a search panel, or provide any visible
                 response.
               </p>
+              <p class="issue-link">
+                Live page:
+                <a href="https://www.gameetingfinder.com/"
+                  >https://www.gameetingfinder.com/</a
+                >
+              </p>
               <ul>
                 <li>
                   <strong>What the user sees:</strong> a button that looks
@@ -303,6 +316,16 @@
               <p>
                 On the Resources and Research pages, links that suggest they
                 will take users to meetings instead route back to the homepage.
+              </p>
+              <p class="issue-link">
+                Live pages:
+                <a href="https://www.gameetingfinder.com/resources"
+                  >/resources</a
+                >
+                and
+                <a href="https://www.gameetingfinder.com/research"
+                  >/research</a
+                >
               </p>
               <ul>
                 <li>
@@ -344,6 +367,12 @@
                 <strong>Find a Meeting Happening Right Now</strong>, but the
                 link target is the homepage.
               </p>
+              <p class="issue-link">
+                Live page:
+                <a href="https://www.gameetingfinder.com/meetings"
+                  >https://www.gameetingfinder.com/meetings</a
+                >
+              </p>
               <ul>
                 <li>
                   <strong>What the user sees:</strong> a strong CTA that does
@@ -382,6 +411,12 @@
                 While browsing the live meeting directory, a newsletter signup
                 modal appears automatically after a short delay.
               </p>
+              <p class="issue-link">
+                Live page:
+                <a href="https://www.gameetingfinder.com/find-a-meeting"
+                  >https://www.gameetingfinder.com/find-a-meeting</a
+                >
+              </p>
               <ul>
                 <li>
                   <strong>What the user sees:</strong> a marketing popup over
@@ -419,18 +454,24 @@
             <div class="issue-copy">
               <p>
                 Meeting cards expose a
-                <strong>Share this meeting</strong> action, but clicking it does
-                not show a share dialog, copy confirmation, or any visible
-                feedback.
+                <strong>Share this meeting</strong> action, but clicking it
+                downloads an image file instead of opening a share dialog or
+                handling a share flow.
+              </p>
+              <p class="issue-link">
+                Live page:
+                <a href="https://www.gameetingfinder.com/find-a-meeting"
+                  >https://www.gameetingfinder.com/find-a-meeting</a
+                >
               </p>
               <ul>
                 <li>
                   <strong>What the user sees:</strong> a share control that
-                  appears non-responsive.
+                  downloads an image rather than helping them share the meeting.
                 </li>
                 <li>
-                  <strong>Why it matters:</strong> users cannot confidently pass
-                  meetings to sponsors, family, or peers.
+                  <strong>Why it matters:</strong> users are diverted into an
+                  unexpected download instead of a usable sharing action.
                 </li>
                 <li>
                   <strong>Recommended fix:</strong> trigger a native share flow,
@@ -466,14 +507,21 @@
                 <strong>Email Address *</strong> as required, but they are not
                 enforced as required fields.
               </p>
+              <p class="issue-link">
+                Live page:
+                <a href="https://www.gameetingfinder.com/partnerships"
+                  >https://www.gameetingfinder.com/partnerships</a
+                >
+              </p>
               <ul>
                 <li>
                   <strong>What the user sees:</strong> a form that visually
                   marks required fields without matching behavior.
                 </li>
                 <li>
-                  <strong>Why it matters:</strong> this creates confusion and
-                  weakens confidence in the form.
+                  <strong>Why it matters:</strong> the form can be submitted
+                  without those fields, but the submission will not go anywhere
+                  useful because the email details are missing.
                 </li>
                 <li>
                   <strong>Recommended fix:</strong> align the labels and actual

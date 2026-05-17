@@ -30,6 +30,8 @@ Note: final verification was performed in a manually launched Chromium instance 
 | **URL** | https://www.gameetingfinder.com/ |
 | **Repro Video** | N/A |
 
+Live page: [https://www.gameetingfinder.com/](https://www.gameetingfinder.com/)
+
 **Description**
 
 The global `Search meetings` button is visible in the header, but clicking it on the homepage produces no navigation, no modal, no focus change, and no visible UI response. For a prominent primary action in the global header, that makes the control feel broken.
@@ -55,6 +57,8 @@ The global `Search meetings` button is visible in the header, but clicking it on
 | **URL** | https://www.gameetingfinder.com/resources and https://www.gameetingfinder.com/research |
 | **Repro Video** | N/A |
 
+Live pages: [Resources](https://www.gameetingfinder.com/resources) and [Research](https://www.gameetingfinder.com/research)
+
 **Description**
 
 Several recovery-oriented links that imply they will take users to meetings actually point to `/` instead of `/find-a-meeting`. I confirmed this on both the Resources page (`find a virtual GA meeting`) and the Research page (`find a virtual GA meeting`, `← Find Meetings`, and footer `Find a meeting`). In high-urgency recovery flows, that sends users back to marketing content instead of directly to the meetings directory.
@@ -78,6 +82,8 @@ Several recovery-oriented links that imply they will take users to meetings actu
 | **URL** | https://www.gameetingfinder.com/meetings |
 | **Repro Video** | N/A |
 
+Live page: [https://www.gameetingfinder.com/meetings](https://www.gameetingfinder.com/meetings)
+
 **Description**
 
 On the main meetings landing page, the featured card says `Find a Meeting Happening Right Now` / `Join a Meeting Now`, but the CTA links to `/`. That creates a dead-end on the core browse page because the action returns users to the homepage instead of taking them to an immediately joinable meeting view.
@@ -99,6 +105,8 @@ On the main meetings landing page, the featured card says `Find a Meeting Happen
 | **Category** | ux |
 | **URL** | https://www.gameetingfinder.com/find-a-meeting |
 | **Repro Video** | N/A |
+
+Live page: [https://www.gameetingfinder.com/find-a-meeting](https://www.gameetingfinder.com/find-a-meeting)
 
 **Description**
 
@@ -125,9 +133,11 @@ On the live meeting directory, a newsletter signup modal appears automatically a
 | **URL** | https://www.gameetingfinder.com/find-a-meeting |
 | **Repro Video** | N/A |
 
+Live page: [https://www.gameetingfinder.com/find-a-meeting](https://www.gameetingfinder.com/find-a-meeting)
+
 **Description**
 
-Each meeting card exposes a `Share this meeting` button, but clicking it on the live meeting directory produced no modal, no native share prompt, no copied state, and no visible feedback. That makes a high-value collaboration action feel broken.
+Each meeting card exposes a `Share this meeting` button, but clicking it on the live meeting directory downloads an image file instead of opening a share dialog, native share prompt, or copy flow. That turns a sharing action into an unexpected file download.
 
 **Repro Steps**
 
@@ -136,7 +146,7 @@ Each meeting card exposes a `Share this meeting` button, but clicking it on the 
 
 2. Click `Share this meeting` on the card.
 
-3. **Observe:** the page remains unchanged and no sharing UI or confirmation appears.
+3. **Observe:** an image file is downloaded instead of any sharing UI or confirmation appearing.
    ![Result](screenshots/share-meeting-result.png)
 
 ---
@@ -150,9 +160,11 @@ Each meeting card exposes a `Share this meeting` button, but clicking it on the 
 | **URL** | https://www.gameetingfinder.com/partnerships |
 | **Repro Video** | N/A |
 
+Live page: [https://www.gameetingfinder.com/partnerships](https://www.gameetingfinder.com/partnerships)
+
 **Description**
 
-The partnership inquiry modal labels `Full Name *` and `Email Address *` with asterisks, but the actual fields are not marked required in the DOM and clicking `Next` does not surface any required-field validation. That creates a mismatch between what the form tells users and what it technically enforces.
+The partnership inquiry modal labels `Full Name *` and `Email Address *` with asterisks, but the actual fields are not marked required in the DOM and clicking `Next` does not surface any required-field validation. That means the form can proceed without the email fields being filled in, leaving the submission without the contact details needed to go anywhere useful.
 
 **Repro Steps**
 
