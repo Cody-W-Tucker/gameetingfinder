@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAMeetingFinder Client Brief</title>
+    <style>
+      :root {
+        --bg: #f5f1e8;
+        --card: #fffdf8;
+        --ink: #1d1b18;
+        --muted: #6f675f;
+        --line: #ded6cb;
+        --accent: #1f5f8b;
+        --medium: #d97706;
+        --low: #4b5563;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Inter, Arial, sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 32px 20px 64px;
+      }
+      .hero {
+        background: linear-gradient(135deg, #17344a, #2f6f8f);
+        color: white;
+        border-radius: 24px;
+        padding: 32px;
+        margin-bottom: 24px;
+      }
+      .hero h1 {
+        margin: 0 0 8px;
+        font-size: 40px;
+        line-height: 1.1;
+      }
+      .hero p {
+        margin: 0;
+        max-width: 760px;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 18px;
+      }
+      .meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        margin: 24px 0;
+      }
+      .meta-card,
+      .summary-card,
+      .issue {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+      }
+      .meta-card {
+        padding: 16px;
+      }
+      .label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+      .value {
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .section-title {
+        margin: 28px 0 14px;
+        font-size: 24px;
+      }
+      .summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+        margin-bottom: 28px;
+      }
+      .summary-card {
+        padding: 18px;
+      }
+      .summary-card h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+      }
+      .summary-card p {
+        margin: 0;
+        color: var(--muted);
+      }
+      .issues {
+        display: grid;
+        gap: 18px;
+      }
+      .issue {
+        overflow: hidden;
+      }
+      .issue-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 20px 20px 0;
+        align-items: flex-start;
+      }
+      .issue-head h3 {
+        margin: 0;
+        font-size: 24px;
+      }
+      .badge {
+        white-space: nowrap;
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .badge.medium {
+        background: #fff3df;
+        color: var(--medium);
+      }
+      .badge.low {
+        background: #eef2f7;
+        color: var(--low);
+      }
+      .issue-body {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 18px;
+        padding: 18px 20px 20px;
+      }
+      .issue-copy p {
+        margin: 0 0 12px;
+      }
+      .issue-copy ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+      .issue-copy li {
+        margin-bottom: 8px;
+      }
+      .shot {
+        display: grid;
+        gap: 10px;
+      }
+      .shot img {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: white;
+      }
+      .caption {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .footer {
+        margin-top: 28px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 14px;
+      }
+      @media (max-width: 860px) {
+        .hero h1 {
+          font-size: 32px;
+        }
+        .issue-body {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media print {
+        body {
+          background: white;
+        }
+        .wrap {
+          max-width: none;
+          padding: 0;
+        }
+        .hero {
+          box-shadow: none;
+        }
+        .issue,
+        .meta-card,
+        .summary-card {
+          box-shadow: none;
+        }
+        .issue {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <section class="hero">
+        <h1>GAMeetingFinder QA Brief</h1>
+        <p>
+          This brief summarizes the most important public-site issues found
+          during a browser-based review. The goal is to highlight what users
+          experience, why it matters, and what should be fixed first.
+        </p>
+      </section>
+      <section class="meta">
+        <div class="meta-card">
+          <div class="label">Site Reviewed</div>
+          <div class="value">gameetingfinder.com</div>
+        </div>
+        <div class="meta-card">
+          <div class="label">Review Date</div>
+          <div class="value">May 17, 2026</div>
+        </div>
+        <div class="meta-card">
+          <div class="label">Total Findings</div>
+          <div class="value">6 issues</div>
+        </div>
+        <div class="meta-card">
+          <div class="label">Severity Mix</div>
+          <div class="value">6 Medium</div>
+        </div>
+      </section>
+      <h2 class="section-title">Executive Summary</h2>
+      <section class="summary">
+        <div class="summary-card">
+          <h3>Primary Theme</h3>
+          <p>
+            Several high-intent actions look available but do not take users
+            where they expect to go.
+          </p>
+        </div>
+        <div class="summary-card">
+          <h3>Highest Risk Area</h3>
+          <p>
+            Recovery and meeting-discovery flows contain misrouted links and
+            interrupted user journeys.
+          </p>
+        </div>
+        <div class="summary-card">
+          <h3>Client Impact</h3>
+          <p>
+            Users may lose trust, abandon core tasks, or miss the fastest path
+            to active meetings and help resources.
+          </p>
+        </div>
+      </section>
+      <h2 class="section-title">Findings</h2>
+      <section class="issues">
+        <article class="issue">
+          <div class="issue-head">
+            <h3>1. Search button appears broken</h3>
+            <span class="badge medium">Medium</span>
+          </div>
+          <div class="issue-body">
+            <div class="issue-copy">
+              <p>
+                The homepage header includes a visible
+                <strong>Search meetings</strong> button, but clicking it does
+                not navigate, open a search panel, or provide any visible
+                response.
+              </p>
+              <ul>
+                <li>
+                  <strong>What the user sees:</strong> a button that looks
+                  active but does nothing.
+                </li>
+                <li>
+                  <strong>Why it matters:</strong> this reduces trust right at
+                  the top of the homepage.
+                </li>
+                <li>
+                  <strong>Recommended fix:</strong> connect the button to the
+                  meeting search experience or remove it until it is ready.
+                </li>
+              </ul>
+            </div>
+            <div class="shot">
+              <img
+                src="screenshots/issue-search-button-result.png"
+                alt="Search button remains on homepage with no visible result"
+              />
+              <div class="caption">
+                Observed result: clicking the search button leaves the user on
+                the same homepage with no response.
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="issue">
+          <div class="issue-head">
+            <h3>2. Recovery links send users to the homepage</h3>
+            <span class="badge medium">Medium</span>
+          </div>
+          <div class="issue-body">
+            <div class="issue-copy">
+              <p>
+                On the Resources and Research pages, links that suggest they
+                will take users to meetings instead route back to the homepage.
+              </p>
+              <ul>
+                <li>
+                  <strong>What the user sees:</strong> “find a virtual GA
+                  meeting” and “Find Meetings” links that do not go to the
+                  meeting directory.
+                </li>
+                <li>
+                  <strong>Why it matters:</strong> users in urgent recovery
+                  flows are delayed or redirected into marketing content.
+                </li>
+                <li>
+                  <strong>Recommended fix:</strong> route all meeting-intent
+                  links to <code>/find-a-meeting</code>.
+                </li>
+              </ul>
+            </div>
+            <div class="shot">
+              <img
+                src="screenshots/research-page.png"
+                alt="Research page showing links that route to the homepage"
+              />
+              <div class="caption">
+                Observed result: multiple meeting-oriented links on the Research
+                page point back to the homepage.
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="issue">
+          <div class="issue-head">
+            <h3>3. Meetings landing page CTA loops back to home</h3>
+            <span class="badge medium">Medium</span>
+          </div>
+          <div class="issue-body">
+            <div class="issue-copy">
+              <p>
+                The featured call-to-action on <code>/meetings</code> says
+                <strong>Find a Meeting Happening Right Now</strong>, but the
+                link target is the homepage.
+              </p>
+              <ul>
+                <li>
+                  <strong>What the user sees:</strong> a strong CTA that does
+                  not continue the meeting flow.
+                </li>
+                <li>
+                  <strong>Why it matters:</strong> this creates a dead-end on a
+                  core discovery page.
+                </li>
+                <li>
+                  <strong>Recommended fix:</strong> link directly to a
+                  current-meetings view or active meeting filter.
+                </li>
+              </ul>
+            </div>
+            <div class="shot">
+              <img
+                src="screenshots/meetings-page.png"
+                alt="Meetings landing page showing the featured CTA card"
+              />
+              <div class="caption">
+                Observed result: the “Join a Meeting Now” CTA on the meetings
+                landing page routes back to home.
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="issue">
+          <div class="issue-head">
+            <h3>4. Newsletter modal interrupts meeting browsing</h3>
+            <span class="badge medium">Medium</span>
+          </div>
+          <div class="issue-body">
+            <div class="issue-copy">
+              <p>
+                While browsing the live meeting directory, a newsletter signup
+                modal appears automatically after a short delay.
+              </p>
+              <ul>
+                <li>
+                  <strong>What the user sees:</strong> a marketing popup over
+                  the meeting list.
+                </li>
+                <li>
+                  <strong>Why it matters:</strong> it interrupts the
+                  highest-intent recovery flow on the site.
+                </li>
+                <li>
+                  <strong>Recommended fix:</strong> suppress the modal on
+                  meeting-critical pages or delay it until after meaningful
+                  engagement.
+                </li>
+              </ul>
+            </div>
+            <div class="shot">
+              <img
+                src="screenshots/issue-newsletter-result.png"
+                alt="Newsletter modal covering the meeting directory"
+              />
+              <div class="caption">
+                Observed result: the newsletter modal appears automatically over
+                the meeting directory.
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="issue">
+          <div class="issue-head">
+            <h3>5. Share action appears inert on meeting cards</h3>
+            <span class="badge medium">Medium</span>
+          </div>
+          <div class="issue-body">
+            <div class="issue-copy">
+              <p>
+                Meeting cards expose a
+                <strong>Share this meeting</strong> action, but clicking it does
+                not show a share dialog, copy confirmation, or any visible
+                feedback.
+              </p>
+              <ul>
+                <li>
+                  <strong>What the user sees:</strong> a share control that
+                  appears non-responsive.
+                </li>
+                <li>
+                  <strong>Why it matters:</strong> users cannot confidently pass
+                  meetings to sponsors, family, or peers.
+                </li>
+                <li>
+                  <strong>Recommended fix:</strong> trigger a native share flow,
+                  copy-to-clipboard confirmation, or a visible share modal.
+                </li>
+              </ul>
+            </div>
+            <div class="shot">
+              <img
+                src="screenshots/share-meeting-result.png"
+                alt="Meeting page after clicking share with no visible change"
+              />
+              <div class="caption">
+                Observed result: clicking “Share this meeting” produced no
+                visible share state or confirmation.
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="issue">
+          <div class="issue-head">
+            <h3>
+              6. Partnership form signals required fields but does not enforce
+              them
+            </h3>
+            <span class="badge medium">Medium</span>
+          </div>
+          <div class="issue-body">
+            <div class="issue-copy">
+              <p>
+                The partnership inquiry modal labels
+                <strong>Full Name *</strong> and
+                <strong>Email Address *</strong> as required, but they are not
+                enforced as required fields.
+              </p>
+              <ul>
+                <li>
+                  <strong>What the user sees:</strong> a form that visually
+                  marks required fields without matching behavior.
+                </li>
+                <li>
+                  <strong>Why it matters:</strong> this creates confusion and
+                  weakens confidence in the form.
+                </li>
+                <li>
+                  <strong>Recommended fix:</strong> align the labels and actual
+                  validation rules so the form behaves consistently.
+                </li>
+              </ul>
+            </div>
+            <div class="shot">
+              <img
+                src="screenshots/issue-partnership-cta-result.png"
+                alt="Partnership inquiry modal with required-marked fields"
+              />
+              <div class="caption">
+                Observed result: the modal shows required asterisks, but the
+                required-field enforcement does not match.
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+      <div class="footer">
+        Prepared from a live browser review of the public site. Supporting
+        screenshots are stored alongside this brief in the same output folder.
+      </div>
+    </div>
+  </body>
+</html>
