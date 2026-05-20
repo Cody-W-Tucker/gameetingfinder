@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resilience, recovery, and downtime brief</title>
+    <style>
+      :root {
+        --bg: #f5f1e8;
+        --card: #fffdf8;
+        --ink: #1d1b18;
+        --muted: #6f675f;
+        --line: #ded6cb;
+        --strong: #17344a;
+        --soft: #f8fbfd;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Inter, Arial, sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+        line-height: 1.55;
+      }
+      .wrap {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 32px 20px 64px;
+      }
+      .hero {
+        background: linear-gradient(135deg, #17344a, #2f6f8f);
+        color: white;
+        border-radius: 24px;
+        padding: 32px;
+        margin-bottom: 24px;
+      }
+      .hero h1 {
+        margin: 0 0 10px;
+        font-size: 40px;
+        line-height: 1.08;
+      }
+      .hero p {
+        margin: 0;
+        max-width: 850px;
+        color: rgba(255, 255, 255, 0.92);
+        font-size: 18px;
+      }
+      .meta,
+      .summary,
+      .sections {
+        display: grid;
+        gap: 14px;
+      }
+      .meta {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        margin: 24px 0;
+      }
+      .summary {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        margin-bottom: 28px;
+      }
+      .card,
+      .section-card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+      }
+      .card {
+        padding: 16px 18px;
+      }
+      .section-card {
+        padding: 20px;
+      }
+      .section-title {
+        margin: 28px 0 14px;
+        font-size: 24px;
+      }
+      .label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+      .value {
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .card h3,
+      .section-card h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+      }
+      .card p,
+      .section-card p {
+        margin: 0;
+        color: var(--muted);
+      }
+      .section-card > p {
+        margin: 0 0 14px;
+        color: var(--ink);
+      }
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      .pane {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 16px;
+      }
+      .pane h4 {
+        margin: 0 0 10px;
+        font-size: 15px;
+        color: var(--strong);
+      }
+      ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+      li {
+        margin-bottom: 8px;
+      }
+      .callout {
+        margin-top: 14px;
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: var(--soft);
+        border: 1px solid #d9e8f2;
+      }
+      .callout strong {
+        color: var(--strong);
+      }
+      .footer {
+        margin-top: 28px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 14px;
+      }
+      @media (max-width: 860px) {
+        .hero h1 {
+          font-size: 32px;
+        }
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media print {
+        body {
+          background: white;
+        }
+        .wrap {
+          max-width: none;
+          padding: 0;
+        }
+        .hero,
+        .card,
+        .section-card {
+          box-shadow: none;
+        }
+        .section-card {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <section class="hero">
+        <h1>Resilience, recovery, and downtime brief</h1>
+        <p>
+          This document is the quick way into the resilience work. It pulls the
+          operational issues out of the repo so the next person does not have to
+          piece them together from thousands of lines of app code.
+        </p>
+      </section>
+
+      <section class="meta">
+        <div class="card">
+          <div class="label">Focus</div>
+          <div class="value">Resilience and recovery</div>
+        </div>
+        <div class="card">
+          <div class="label">Review date</div>
+          <div class="value">May 19, 2026</div>
+        </div>
+        <div class="card">
+          <div class="label">Current read</div>
+          <div class="value">Portable app, weak recovery plumbing</div>
+        </div>
+        <div class="card">
+          <div class="label">Decision frame</div>
+          <div class="value">Turn repo clues into an ops plan</div>
+        </div>
+      </section>
+
+      <h2 class="section-title">Executive summary</h2>
+      <section class="summary">
+        <div class="card">
+          <h3>Core finding</h3>
+          <p>
+            Most of the resilience work is started but we're missing a target
+            for a full recovery system built.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Main risks</h3>
+          <p>
+            Local disk writes, ad hoc backups, missing health visibility, and
+            origin pressure from admin and analytics behavior.
+          </p>
+        </div>
+        <div class="card">
+          <h3>How to use this</h3>
+          <p>
+            Each section points to a specific place in the repo so someone can
+            pick up the work without digging through the codebase again.
+          </p>
+        </div>
+      </section>
+
+      <h2 class="section-title">1. Current resilience shape</h2>
+      <section class="sections">
+        <article class="section-card">
+          <p>
+            The app fairly portable. JWT cookies mean the web tier is not tied
+            to a single process. Postgres holds the business state. Static
+            assets are already cacheable.
+          </p>
+          <div class="two-col">
+            <div class="pane">
+              <h4>Observed strengths</h4>
+              <ul>
+                <li>
+                  `web/auth.py` and `web/main.py` use JWT cookies, not
+                  server-memory sessions
+                </li>
+                <li>
+                  `web/main.py` reads business state from Postgres, not local
+                  memory
+                </li>
+                <li>`web/main.py` sets long cache headers for `/static/*`</li>
+                <li>
+                  `web/main.py` already treats anon meeting data as cacheable
+                  for short windows
+                </li>
+              </ul>
+            </div>
+            <div class="pane">
+              <h4>Why these are problematic</h4>
+              <ul>
+                <li>
+                  <strong>Local avatar writes:</strong> avatars stored in
+                  `web/static/avatars/` disappear on container restart, can't be
+                  shared across multiple app instances, and create state that
+                  lives outside the database—breaking the portability.
+                </li>
+                <li>
+                  <strong>Local invoice directory:</strong> Same as above, plus
+                  these would be missing if, for example, you spun this up in a
+                  different server.
+                </li>
+                <li>
+                  <strong>Missing `/healthz`:</strong> without a health
+                  endpoint, load balancers can't route away from failing
+                  instances, monitoring can't auto-alert. So you wouldn't know
+                  if the site is down and you have no option for automatically
+                  failing over to another server.
+                </li>
+                <li>
+                  <strong>Local-script backups:</strong> `backup_db.py` writes
+                  to the same disk it's protecting, requires manual execution,
+                  and provides zero protection against the most common failure
+                  mode—loss of the host itself
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout">
+            <strong>Implementation note:</strong> the app is fairly portable.
+            The real portability problems are file storage, recovery procedure,
+            and operational coupling.
+          </div>
+        </article>
+      </section>
+
+      <h2 class="section-title">2. Recovery path</h2>
+      <section class="sections">
+        <article class="section-card">
+          <p>
+            The repo shows parts of a recovery path, but not one path that the
+            team can trust end to end. There is enough here to rebuild the app.
+            What is missing is the sequence that turns a failure into a routine
+            restore instead of an improvisation.
+          </p>
+          <div class="two-col">
+            <div class="pane">
+              <h4>Observed recovery helpers</h4>
+              <ul>
+                <li>
+                  `Dockerfile` and `Procfile` show a clear runnable app shape
+                </li>
+                <li>
+                  `migrate.py` gives a straightforward schema migration path
+                </li>
+                <li>
+                  `sync_local.py` shows the team already thinks in terms of
+                  restoring DB state from dumps
+                </li>
+                <li>
+                  Most public behavior can be recreated from app code plus
+                  database state
+                </li>
+              </ul>
+            </div>
+            <div class="pane">
+              <h4>Observed recovery gaps</h4>
+              <ul>
+                <li>
+                  <strong>No repo-level runbook:</strong> DB restore, env, and
+                  host rebuild steps exist separately but aren't tied together,
+                  so recovery requires tribal knowledge and improvisation
+                  instead of being a repeatable procedure
+                </li>
+                <li>
+                  <strong>Runtime files not externalized:</strong> avatars and
+                  invoices still live on local disk, so they're lost during
+                  recovery and can't be restored from DB backup alone
+                </li>
+                <li>
+                  <strong>Recovery success checks implied:</strong> there's no
+                  codified checklist of "what working looks like," so the team
+                  can't confidently declare recovery complete
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout">
+            <strong>Implementation note:</strong> you're missing a restore path
+            somone else could run without tribal knowledge.
+          </div>
+        </article>
+      </section>
+
+      <h2 class="section-title">3. Backup and data durability</h2>
+      <section class="sections">
+        <article class="section-card">
+          <p>
+            The repo already makes it clear that the current backup posture is
+            temporary. The question is not whether someone can dump the
+            database. The question is whether backups, retention, off-platform
+            storage, and restore confidence are treated as part of normal
+            operations.
+          </p>
+          <div class="two-col">
+            <div class="pane">
+              <h4>Observed in the repo</h4>
+              <ul>
+                <li>
+                  `backup_db.py` writes compressed dumps to a local `backups/`
+                  folder
+                </li>
+                <li>
+                  `backup_db.py` assumes Windows paths and scheduled local
+                  execution
+                </li>
+                <li>
+                  `CONTRIBUTING.md` explicitly calls out off-Railway backup
+                  storage as needed work
+                </li>
+                <li>
+                  `sync_local.py` shows restore is possible, but not yet treated
+                  as production recovery discipline
+                </li>
+              </ul>
+            </div>
+            <div class="pane">
+              <h4>What needs to be explicit</h4>
+              <ul>
+                <li>Which data sets are mandatory to preserve</li>
+                <li>
+                  Where DB backups live outside the host and outside the
+                  provider
+                </li>
+                <li>
+                  Which runtime files also need durable storage, not just DB
+                  backup
+                </li>
+                <li>
+                  What a successful restore check looks like after recovery
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout">
+            <strong>Implementation note:</strong> the backup gap is simple:
+            there is a script, but there is not yet a recovery system.
+          </div>
+        </article>
+      </section>
+
+      <h2 class="section-title">4. Uptime pressure inside the app</h2>
+      <section class="sections">
+        <article class="section-card">
+          <p>
+            The clearest uptime clue is already in the comments. This app has
+            seen origin stress from internal behavior, not just provider
+            outages. Resilience work should start by reducing self-inflicted
+            load.
+          </p>
+          <div class="two-col">
+            <div class="pane">
+              <h4>Observed in the repo</h4>
+              <ul>
+                <li>`web/main.py` adds TTL caches for hot admin endpoints</li>
+                <li>
+                  `web/main.py` comments explicitly mention ~8.7k HTTP 504s from
+                  admin polling load
+                </li>
+                <li>
+                  `web/main.py` pre-pings DB connections to avoid
+                  stale-connection failures
+                </li>
+                <li>
+                  `web/main.py` uses short-lived in-process caches for meetings
+                  and visitor counts
+                </li>
+              </ul>
+            </div>
+            <div class="pane">
+              <h4>What should improve first</h4>
+              <ul>
+                <li>
+                  Separate public-site stability from `/dailypaper/*` polling
+                  and analytics pressure
+                </li>
+                <li>
+                  Identify endpoints currently protected only by in-process
+                  caching
+                </li>
+                <li>
+                  Add explicit health visibility instead of inferring health
+                  from page loads
+                </li>
+                <li>
+                  Decide which internal surfaces are allowed to degrade before
+                  the public site does
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout">
+            <strong>Implementation note:</strong> some of the uptime problem is
+            already diagnosed in comments. The next step is to treat those
+            comments as design constraints instead of leaving them as history.
+          </div>
+        </article>
+      </section>
+
+      <h2 class="section-title">5. Business continuity</h2>
+      <section class="sections">
+        <article class="section-card">
+          <p>
+            This is where technical recovery becomes something people can
+            actually use. Portable code and existing scripts are not enough.
+            Someone still needs to know what to restore first, what counts as
+            "good enough," and which parts of the system can wait.
+          </p>
+          <div class="two-col">
+            <div class="pane">
+              <h4>What needs to be clear</h4>
+              <ul>
+                <li>Who owns recovery when the app, DB, or host fails</li>
+                <li>
+                  What gets restored first: public site, auth, admin, analytics
+                </li>
+                <li>
+                  Which services are required for "good enough" restoration
+                </li>
+                <li>
+                  How the team verifies that the site is safe to trust again
+                </li>
+              </ul>
+            </div>
+            <div class="pane">
+              <h4>What needs a decision</h4>
+              <ul>
+                <li>
+                  Who decides the site is "restored enough" to reopen fully
+                </li>
+                <li>
+                  What gets deferred during an incident instead of fixed live
+                </li>
+                <li>What communication goes out when service is degraded</li>
+                <li>
+                  What recovery steps are important enough to document now
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout">
+            <strong>Implementation note:</strong> this is the point where a
+            technical recovery path turns into an operating procedure.
+          </div>
+        </article>
+      </section>
+    </div>
+  </body>
+</html>
